@@ -10,7 +10,6 @@ def mySqrt(self, x):
         lo, hi = min(2**((b-1)//2), 0), x 
         while lo < hi:
             mid = (lo+hi) // 2 + 1
-            print(lo, hi, mid)
             if mid*mid == x:
                 return mid
             elif mid*mid < x:
