@@ -1,0 +1,52 @@
+The main idea is DP. Denote `f(i,j)` the solution of the substring `s[i:j+1]`. Then, it is easy to see that 
+
+> `f(i,j)=f(i+1,j-1)+2`, if `s[i]==s[j]`  
+> `f(i,j)=max(f(i,j-1), f(i+1,j))`, otherwise.
+
+**Recursion + Memorization**
+```python
+def longestPalindromeSubseq(self, s):
+        # recursion
+        n = len(s)
+        P = [[0]*n for _ in range(n)]
+
+        def find(i, j):
+            if P[i][j] or i > j:
+                return P[i][j]
+
+            if i == j:
+                P[i][j] = 1
+            elif s[i] == s[j]:
+                P[i][j] = find(i+1, j-1) + 2
+            else:
+                P[i][j] = max(find(i+1, j), find(i, j-1))
+
+            return P[i][j]
+
+        return find(0, len(s)-1)
+```
+
+**Bottom Up**
+```python
+def longestPalindromeSubseq(self, s):
+        # dp
+        n = len(s)
+        #P = collections.defaultdict(int) # <-- hasing is slow!
+        P = [[0]*n for _ in range(n)]
+
+        for k in range(n):
+            for i in range(n-k):
+                j = k + i
+                if i == j:
+                    P[i][j] = 1
+                elif s[i] == s[j]:
+                    P[i][j] = P[i+1][j-1] + 2
+                else:
+                    P[i][j] = max(P[i+1][j], P[i][j-1])
+
+        return(P[0][n-1])
+```
+
+**Remark 1:** normally, bottom up dp is faster than recurion + memorization. However, in this case, recursion + memorization is faster because actually we do not need to know *all* information of the substrings.
+
+**Remark 2:** using `dict` here is *slow* because hashing is slower than direct index/key accessing.
